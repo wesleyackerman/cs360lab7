@@ -1,0 +1,113 @@
+<html> 
+<head> 
+<title>City Finder</title> 
+	<script src="https://code.jquery.com/jquery-1.10.2.js"></script> 
+	<script> 
+	$(document).ready(function() 
+		{ $( "#cityfield" ).keyup(function() 
+			{ var url = "http://cs360.wesleyackerman.com:3000/getCity?q="+$("#cityfield").val(); 
+			$.getJSON(url,function(data)
+			{ var everything; 
+				everything = "<ul>"; 
+				$.each(data, function(i,item) { everything += "<li> "+data[i].city; }); 
+				everything += "</ul>"; $("#txtHint").html(everything); }) 
+				.done(function() { console.log('getJSON request succeeded!'); }) 
+				.fail(function(jqXHR, textStatus, errorThrown) { console.log('getJSON request failed! ' + textStatus); 
+				console.log("incoming "+jqXHR.responseText); }) .always(function() { console.log('getJSON request ended!'); }) 
+				.complete(function() { console.log("complete"); 
+			}); 
+		}); 
+	$("#button").click(function(e){ 
+			var value = $("#cityfield").val(); 
+			$("#dispcity").text(value);
+			console.log(value);
+			e.preventDefault();
+			
+			var myurl= "https://api.wunderground.com/api/93e9b86fc7bb89ce/geolookup/conditions/q/UT/";
+			myurl += value;
+			myurl += ".json";
+			console.log(myurl);
+			$.ajax({ 
+				url : myurl,
+				dataType : "jsonp",
+				success : function(parsed_json) {
+					var location = parsed_json['location']['city'];
+					var temp_string = parsed_json['current_observation']['temperature_string'];
+					var current_weather = parsed_json['current_observation']['weather'];
+					everything = "<ul>";
+					everything += "<li>Location: "+location;
+					everything += "<li>Temperature: "+temp_string;
+					everything += "<li>Weather: "+current_weather;
+					everything += "</ul>";
+					$("#weather").html(everything);
+				}
+			});
+		});
+		
+		$("#tickerForm").on('submit', function(e){
+			var latitude = $("#latitude").val();
+			var longitude = $("#longitude").val();
+			$("#tickerDisp").text(latitude + "," + longitude);
+			e.preventDefault();
+			
+			//var myurl = "https://maps.googleapis.com/maps/api/elevation/json?key=AIzaSyBirgg0e0ZZLE9ztPgz6DGWT-PpcyqV8YA&locations=";
+			var myurl = "http://cs360.wesleyackerman.com:3000/getElevation?q=";
+
+			myurl += latitude;
+			myurl += ",";
+			myurl += longitude;
+            		console.log(myurl);
+			var xhr = new XMLHttpRequest();
+			xhr.onload = handler;
+			xhr.open('GET', myurl);
+			xhr.withCredentials=false;
+			xhr.send();
+			/*$.getJSON(myurl, function(data,status){
+					var elevation = data.results.elevation
+					var everything = "<ul>";
+					everything += "<li>Elevation: " + elevation;
+					everything += "</ul>";
+					$("#stock").html(everything);
+
+			});*/
+		});
+	}); 
+	</script>
+	<script>
+	function handler() {
+		if(this.status == 200 && this.responseText != null) {
+			var jsonResponse = JSON.parse(this.responseText);
+			var elevation = jsonResponse.results[0].elevation;
+			elevation = elevation * 3.28084;
+			elevation = elevation.toFixed(2);
+			console.log(jsonResponse);
+			console.log(elevation);
+			var everything = "<ul>";
+			everything += "<li>Elevation: " + elevation + " ft";
+			everything += "</ul>";
+			$("#stock").html(everything);
+		}	
+	}
+	</script>
+</head> 
+<body> 
+<form> Enter A Utah City: <input type="text" id="cityfield" value=""><br> Suggestion: <span id="txtHint">Empty</span> 
+<input id="button" type="submit" value="Submit"> </form> 
+<p>City</p> 
+<textarea id="dispcity">No City</textarea> 
+<p>Current Weather</p> 
+<div id="weather">No weather</div>
+<br><br>
+
+<form id="tickerForm"> Enter a latitude(-90 to 90) and a longitude (-180 to 180):
+<br>Latitude: <input type="text" id="latitude" value=""><br>
+Longitude:<input type="text" id="longitude" value=""><br>
+<input id="tickerSubmit" type="submit" value="Submit"> </form> 
+<p>Location:</p> 
+<textarea id="tickerDisp">No Location</textarea> 
+<p>Elevation Information</p> 
+<div id="stock">No Elevation</div> 
+
+<br>
+</body>
+</html>

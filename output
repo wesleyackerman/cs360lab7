@@ -1,0 +1,24 @@
+nohup: ignoring input
+
+> cities@0.0.0 start /home/bitnami/lab7/cities
+> node ./bin/www
+
+[0mGET / [32m200 [0m10.642 ms - 3865[0m
+Elevation request: 88,88
+[0mGET /getElevation?q=88,88 [32m200 [0m193.047 ms - -[0m
+[0mGET / [32m200 [0m1.764 ms - 3865[0m
+Elevation request: 99,99
+[0mGET /getElevation?q=99,99 [33m400 [0m41.486 ms - -[0m
+Elevation request: 99,99
+[0mGET /getElevation?q=99,99 [33m400 [0m38.705 ms - -[0m
+Elevation request: 99,99
+[0mGET /getElevation?q=99,99 [33m400 [0m39.127 ms - -[0m
+Elevation request: 99,99
+[0mGET /getElevation?q=99,99 [33m400 [0m37.116 ms - -[0m
+Elevation request: 77,77
+[0mGET /getElevation?q=77,77 [32m200 [0m57.725 ms - -[0m
+[0mGET / [36m304 [0m0.847 ms - -[0m
+[0mGET /getCity [32m200 [0m4.532 ms - 2[0m
+[0mGET /getCity?q= [32m200 [0m5.740 ms - 5068[0m
+Elevation request: 
+[0mGET /getElevation?q= [33m400 [0m42.965 ms - -[0m
